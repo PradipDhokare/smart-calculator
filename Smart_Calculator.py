@@ -1,31 +1,42 @@
 import sys
-print(sys.path.append("F:\\Coding Sikho Python Classs\\Calculator_Functions.py"))  # use double slashes
+sys.path.append("F:\\Coding Sikho Python Classs")  # Add folder, not file
 from Calculator_Functions import *
+
 print(responses[0])
 print(responses[1])
 
 while True:
-    t1 = input("Please Ask: ")
-    for w in t1.split():
-        w_upper = w.upper()
-        if w_upper in operations.keys():
-            func = operations[w_upper]
-            l1 = extract_num(t1)
+    t1 = input("Please Ask: ").upper()
+
+    # Check if it's a known command
+    found = False
+    for key in operations:
+        if key in t1:
+            func = operations[key]
+            nums = extract_num(t1)
             try:
-                if w_upper in ["FACTORIAL", "SIN", "COSIN", "TAN","LOG",
-                               "CELSIUS TO FAHRENHEIT","FAHRENHEIT TO CELSIUS",
-                               "C TO F","F TO C","PRIME","EVEN"]:
-                    r = func(l1[0])
+                # Single-argument functions
+                if key in ["FACTORIAL", "SIN", "COSIN", "TAN", "LOG",
+                           "CELSIUS TO FAHRENHEIT", "FAHRENHEIT TO CELSIUS",
+                           "C TO F", "F TO C", "PRIME", "EVEN"]:
+                    r = func(nums[0])
                 else:
-                    r = func(l1[0], l1[1])
-                print(r)
+                    r = func(nums[0], nums[1])
+                print("→", r)
             except:
-                print("Please ask Correct Question")
+                print("❌ Please ask a correct question with valid numbers.")
+            found = True
             break
 
-        elif w_upper in commands.keys():
-            commands[w_upper]()
-            break
-    else:
+    # Check if it's a special command like "AMIT" or "BYE"
+    if not found:
+        for cmd in commands:
+            if cmd in t1:
+                commands[cmd]()
+                found = True
+                break
+
+    # If nothing matches
+    if not found:
         print(responses[4])
         print(responses[5])
